@@ -22,10 +22,8 @@ t2 = transpose(yy[:,1]);
 intensity = 0.5;
 
 #Get the index for 100 randomly selected samples
-index = rand(500);
+index = rand(100);
 index = array(index*(data.size-1200),dtype = int)+1200;#Make sure there are no faults in the first 1000 samples as they are used to estimate future values
-print where(index < 1200)[0];
-#print index;
 t2[index] = t2[index] + intensity*t2[index];
 
 
@@ -33,17 +31,15 @@ t2[index] = t2[index] + intensity*t2[index];
 c = array([t1,t2]);
 
 ##Estimating t2 from t1.
-##Consider the previous M samples when calculating mean and covariance.
+##Consider the first M samples when calculating mean and covariance.
 t2_est = [];
 M = 1000; # M indicates how many previous samples to consider during estimation
 u_t1 = mean(t1[0:M]);
 u_t2 = mean(t2[0:M]);
 C = array([c[0,0:M],c[1,0:M]]);
 for i in range(M,length):
-#	u_t1 = mean(t1[i-M:i]);
-#	u_t2 = mean(t2[i-M:i]);
-#	C = array([c[0,i-M:i],c[1,i-M:i]]);
 	covar = cov(C);
+	#Estimate the value of t2
 	t2_est.append(u_t2 + (covar[1,1]/covar[0,0])*(t1[i]-u_t1));
 t2_est = array(t2_est);
 
@@ -69,7 +65,7 @@ legend(loc = 'upper right');
 show();
 
 '''Checking for short faults'''
-threshold = 5;
+threshold = 3.5;
 i = 0;
 short_count = 0;
 ind = [];
@@ -86,9 +82,17 @@ while i<diff.size:
 	else :
 		i = i+1;
 print short_count;
-#print array(index);
+indexes = sort(index)+1-M;
 #print diff[array(index)-M];
 
 
+
+##Find out number of true positives
+correct_count = 0;
+for i in range(0,len(ind)):
+	if ind[i] in indexes:
+		correct_count += 1;
+
+print correct_count;
 ''''''
 
