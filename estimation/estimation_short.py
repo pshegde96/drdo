@@ -16,10 +16,20 @@ yy=Y+n    # add noise to signal
 ##Separate the signal as signal from two sensors
 t1 = transpose(yy[:,0]);
 t2 = transpose(yy[:,1]);
-plot(t1);
-plot(t2);
-show();
 
+'''Add the short faults to one of the sensors(t2)'''
+
+intensity = 0.5;
+
+#Get the index for 100 randomly selected samples
+index = rand(500);
+index = array(index*(data.size-1200),dtype = int)+1200;#Make sure there are no faults in the first 1000 samples as they are used to estimate future values
+print where(index < 1200)[0];
+#print index;
+t2[index] = t2[index] + intensity*t2[index];
+
+
+''''''
 c = array([t1,t2]);
 
 ##Estimating t2 from t1.
@@ -37,7 +47,7 @@ for i in range(M,length):
 	t2_est.append(u_t2 + (covar[1,1]/covar[0,0])*(t1[i]-u_t1));
 t2_est = array(t2_est);
 
-diff = t2_est - t2[M:];
+diff = abs(t2_est - t2[M:]);
 print std(diff);
 
 ###Show the results
@@ -57,4 +67,28 @@ plot(t2[M:M+100],'b',label = 'True Sensor Value');
 plot(t2_est[0:100],'g',label = 'Estimated Sensor Value');
 legend(loc = 'upper right');
 show();
+
+'''Checking for short faults'''
+threshold = 5;
+i = 0;
+short_count = 0;
+ind = [];
+while i<diff.size:
+	if diff[i] > threshold: #Occurence of short fault
+		short_count += 1;
+		ind.append(i+1);
+		#Go through all the samples that are part of the same short-fault
+		i = i +1;
+		while (i<diff.size):
+			if diff[i] > threshold:
+				break;
+			i = i+1;
+	else :
+		i = i+1;
+print short_count;
+#print array(index);
+#print diff[array(index)-M];
+
+
+''''''
 

@@ -1,8 +1,8 @@
 from pylab import *
 
-data = loadtxt('data.txt');
+data = loadtxt('data_short.txt');
 diff = data[1:]-data[0:-1];
-N = 1000;
+N = 100;
 stdev = [];
 i = 0;
 while True:
@@ -13,4 +13,3 @@ while True:
 	i = i+N;
 hist(stdev,100);
 show();
-print size(where(abs(diff)>2.0)[0]);

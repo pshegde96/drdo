@@ -33,9 +33,10 @@ measurements = yy;
 kf = kf.em(measurements, n_iter=5)
 (smoothed_state_means, smoothed_state_covariances) = kf.smooth(measurements)
 (filtered_state_means, filtered_state_covariances) = kf.filter(measurements);
-plot(t,smoothed_state_means,'b--');
-plot(t,filtered_state_means,'g--');
-plot(t,y);
-plot(t,yy,'r--');
+plot(t,smoothed_state_means,'b',label = 'Kalman Smoothed');
+plot(t,filtered_state_means,'g',label = 'Kalman Filter');
+plot(t,y,'b--',label = 'Original Function');
+plot(t,yy,'r--',label = 'Erroneous data');
+legend(loc = 'upper right');
 
 show();
