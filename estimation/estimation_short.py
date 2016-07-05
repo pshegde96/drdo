@@ -60,7 +60,9 @@ hist(stdev,100);
 show();
 
 plot(t2[M:M+100],'b',label = 'True Sensor Value');
+#plot(t2[M:],'b',label = 'True Sensor Value');
 plot(t2_est[0:100],'g',label = 'Estimated Sensor Value');
+#plot(t2_est[0:],'g',label = 'Estimated Sensor Value');
 legend(loc = 'upper right');
 show();
 
@@ -81,7 +83,7 @@ while i<diff.size:
 			i = i+1;
 	else :
 		i = i+1;
-print short_count;
+print "Number of short faults detected: {}".format(short_count);
 indexes = sort(index)+1-M;
 #print diff[array(index)-M];
 
@@ -93,6 +95,6 @@ for i in range(0,len(ind)):
 	if ind[i] in indexes:
 		correct_count += 1;
 
-print correct_count;
+print "Number of short faults detected correctly: {}".format(correct_count);
 ''''''
 
